@@ -1,0 +1,138 @@
+version: 2
+
+models:
+
+  - name: customers_by_country
+    description: |
+      How many customers we have in each country
+    columns:
+      - name: country
+        data_type: varchar
+        description: |
+          Country name
+      - name: customers_amount
+        data_type: int
+        description: |
+          Amount of customers in specific country
+
+
+  - name: sql_producers
+    description: |
+      Showing producers of accessorities category
+    columns:
+      - name: id
+        data_type: int
+        description: |
+          id of producer
+      - name: name
+        data_type: varchar
+        description: |
+          name of product
+      - name: category
+        data_type: varchar
+        description: |
+          category of product
+      - name: color
+        data_type: varchar
+        description: |
+          product's color
+      - name: producer
+        data_type: varchar
+        description: |
+          name of producer
+
+
+  - name: ukrainian_customers
+    description: |
+      Showing only ukrainian customers
+    columns:
+      - name: id
+        data_type: int
+        description: |
+          Customer's id
+        tests:
+          - unique
+          - not_null
+      - name: name
+        data_type: varchar
+        description: |
+          Customer's name
+      - name: country
+        data_type: varchar
+        description: |
+          Customer's country - should be Ukraine
+        tests:
+          - accepted_values:
+              values: ['Ukraine']
+      - name: region
+        data_type: varchar
+      - name: city
+        data_type: varchar
+      - name: street
+        data_type: varchar
+      - name: house
+        data_type: int
+      - name: apartment
+        data_type: int
+
+
+  - name: raw_orders
+    tests:
+      - test_full_trg:
+          model_src: source('d_src', 'orders')
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+          compare_model: source('d_src', 'orders')
+    description: |
+      Raw version of orders table.
+      This table is processed incrementally.
+    columns:
+      - name: id
+        data_type: int
+        description: |
+          id of order
+        tests:
+          - unique
+          - not_null
+      - name: product_id
+        data_type: int
+        description: |
+          id of product
+        tests:
+          - relationships:
+              to: source('d_src', 'products')
+              field: id
+      - name: customer_id
+        description: |
+          id of customer
+        data_type: int
+        tests:
+          - relationships:
+              to: source('d_src','customers')
+              field: id
+      - name: amount
+        data_type: int
+        description: |
+          amount of product were ordered
+      - name: price
+        data_type: decimal(10,2)
+        description: |
+          product price which were actual for that timestamp and customer
+      - name: order_ts
+        data_type: date
+        description: |
+          timestamp of transaction
+
+  - name: orders_ukr
+    columns:
+      - name: id
+        data_type: int
+      - name: product_id
+        data_type: int
+      - name: customer_id
+        data_type: int
+      - name: amount
+        data_type: int
+      - name: price
+        data_type: decimal(10,2)
+      - name: order_ts
+        data_type: date

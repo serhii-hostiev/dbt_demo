@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: d_src
+    schema: raw_sch   
+    tables:
+      - name: orders
+      - name: customers
+      - name: products

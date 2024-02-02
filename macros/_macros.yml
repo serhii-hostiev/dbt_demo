@@ -1,0 +1,12 @@
+version: 2
+
+macros:
+  - name: create_orders_by_countries
+    description: |
+      Automate creation orders table for the specific country
+    arguments:
+      - name: trg_country
+        type: string
+        description: |
+          Country for which you want to create orders table
+          (required)

@@ -1,0 +1,143 @@
+[sqlfluff]
+
+dialect = sparksql
+templater = dbt
+
+max_line_length = 140
+exclude_rules = ambiguous.order_by, structure.column_order, structure.using
+large_file_skip_byte_limit = 30000
+# ambiguous.order_by (AM03): Ambiguous ordering directions for columns in order by clause.
+# structure.column_order (ST06): Select wildcards then simple targets before calculations and aggregates.
+# structure.using (ST07): Prefer specifying join keys instead of using USING.
+
+# CPU processes to use while linting.
+# If positive, just implies number of processes.
+# If negative or zero, implies number_of_cpus - specified_number.
+# e.g. -1 means use all processors but one. 0 means all cpus.
+processes = -1
+
+
+# Indentation configuration
+# https://docs.sqlfluff.com/en/stable/layout.html#configuring-indent-locations
+[sqlfluff:indentation]
+indent_unit = space
+tab_space_size = 4
+indented_joins = False
+indented_ctes = True
+indented_using_on = True
+indented_on_contents = True
+indented_then = True
+allow_implicit_indents = False
+template_blocks_indent = True
+
+
+# Layout configuration
+# See https://docs.sqlfluff.com/en/stable/layout.html#configuring-layout-and-spacing
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = trailing
+
+[sqlfluff:templater]
+unwrap_wrapped_queries = True
+
+[sqlfluff:templater:dbt]
+project_dir = ./
+profiles_dir = ./
+profile = dbt_demo
+target = dev-snow
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+
+
+# Aliasing bundle
+
+# AL01 Implicit/explicit aliasing of table.
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+# AL02 Implicit/explicit aliasing of columns.
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+# AL03 Column expression without alias. Use explicit AS clause.
+[sqlfluff:rules:aliasing.expression]
+allow_scalar = False
+
+
+# Ambiguous bundle
+
+# AM05 Join clauses should be fully qualified.
+[sqlfluff:rules:ambiguous.join]
+fully_qualify_join_types = inner
+
+
+# Indentation
+
+# CP01 Inconsistent capitalisation of keywords.
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = upper
+
+# CP02 Inconsistent capitalisation of unquoted identifiers.
+[sqlfluff:rules:capitalisation.identifiers]
+ignore_words = []
+extended_capitalisation_policy = lower
+
+# CP03 Inconsistent capitalisation of function names.
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = upper
+
+# CP04 Inconsistent capitalisation of boolean/null literal.
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = upper
+
+# CP05 Inconsistent capitalisation of datatypes.
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = upper
+
+
+# Convention bundle
+
+# CV03 Trailing commas within select clause.
+[sqlfluff:rules:convention.select_trailing_comma]
+select_clause_trailing_comma = forbid
+
+# CV04 Use consistent syntax to express "count number of rows".
+[sqlfluff:rules:convention.count_rows]
+prefer_count_0 = False
+prefer_count_1 = False
+
+# CV06 Statements must end with a semi-colon.
+[sqlfluff:rules:convention.terminator]
+multiline_newline = True
+require_final_semicolon = False
+
+# CV11 Enforce consistent type casting style.
+[sqlfluff:rules:convention.casting_style]
+preferred_type_casting_style = cast
+
+
+# Layout bundle
+
+# LT03 Operators should follow a standard for being before/after newlines.
+[sqlfluff:rules:layout.operators]
+operator_new_lines = after
+
+
+# References bundle
+
+# RF03 References should be consistent in statements with a single table.
+[sqlfluff:rules:references.consistent]
+single_table_references = consistent
+
+# RF05 Do not use special characters in identifiers.
+[sqlfluff:rules:references.special_chars]
+additional_allowed_characters = ['#']
+allow_space_in_identifier = False
+
+
+# Structure bundle
+
+# ST05 Join/From clauses should not contain subqueries. Use CTEs instead.
+[sqlfluff:rules:structure.subquery]
+forbid_subquery_in = join

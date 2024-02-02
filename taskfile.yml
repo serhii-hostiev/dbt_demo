@@ -1,0 +1,11 @@
+version: 3
+
+tasks:
+  lint:
+    cmds:
+      - sqlfluff fix models/
+
+  ssh-emr:
+    desc: ssh port forwarding to with emr cluster
+    cmds:
+      - ssh -N -L 10001:localhost:10001 ec2-user@ec2-13-50-239-4.eu-north-1.compute.amazonaws.com -i ~/Desktop/avenga/avenga_aws/demo_key.pem

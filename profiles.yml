@@ -1,0 +1,21 @@
+dbt_demo:
+  target: dev-snow
+  outputs:
+    dev-snow:
+      account: tpoiixv-wk66932
+      database: DEMO_DB
+      user: serhiihostiev
+      password: Dbtdemopass@987
+      role: ACCOUNTADMIN
+      schema: PUBLIC
+      threads: 4
+      type: snowflake
+      warehouse: DEMO_WH
+    dev-spark:
+      type: spark
+      method: thrift
+      schema: raw_sch
+      host: localhost
+      port: 10001
+      user: hadoop
+      threads: 4

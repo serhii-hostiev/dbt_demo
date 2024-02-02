@@ -1,0 +1,13 @@
+version: 2
+
+macros:
+  - name: test_full_trg
+    description: |
+      check if target table has all the records from its source table
+    arguments:
+      - name: model
+        type: string
+        description: Checked model
+      - name: model_src
+        type: string
+        description: Source table for specific model
